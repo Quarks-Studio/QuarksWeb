@@ -2,7 +2,7 @@
     "name": "Quarks Studio",
     "short_name": "Quarks Studio",
     "start_url": ".",
-    "display": "standalone",
+    "display": "browser",
     "background_color": "#DA6A00",
     "theme_color": "#DA6A00",
     "description": "Deja el desarrollo en nuestras manos, enfócate en crecer",
