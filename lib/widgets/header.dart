@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quark_web/lenguajes.dart';
 import '../master.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
@@ -64,11 +65,11 @@ class HeaderState extends State<Header> {
             const Expanded(child: SizedBox()),
             Row(
               children: [
-                buildHeaderButton('Nosotros', widget.keyIntroduction),
-                buildHeaderButton('Servicios', widget.keyServices),
-                buildHeaderButton('Herramientas', widget.keyTools),
-                buildHeaderButton('Clientes', widget.keyPortfolio),
-                buildHeaderButton('Contacto', widget.keyContact),
+                buildHeaderButton(nosotros(lenguaje), widget.keyIntroduction),
+                buildHeaderButton(servicios(lenguaje), widget.keyServices),
+                buildHeaderButton(herramientas(lenguaje), widget.keyTools),
+                buildHeaderButton(clientes(lenguaje), widget.keyPortfolio),
+                buildHeaderButton(contacto(lenguaje), widget.keyContact),
               ],
             ),
           ],

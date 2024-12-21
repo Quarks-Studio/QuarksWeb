@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quark_web/lenguajes.dart';
 import '../master.dart';
 
 class Footer extends StatelessWidget {
@@ -9,9 +10,9 @@ class Footer extends StatelessWidget {
     return Container(
       color: color0,
       padding: const EdgeInsets.all(16),
-      child: const Text(
-        '© 2024 Quarks Studio - Todos los derechos reservados',
-        style: TextStyle(color: Colors.white, fontSize: 14),
+      child: Text(
+        footer(lenguaje),
+        style: const TextStyle(color: Colors.white, fontSize: 14),
         textAlign: TextAlign.center,
       ),
     );

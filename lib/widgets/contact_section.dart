@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quark_web/lenguajes.dart';
 
 import '../master.dart';
 
@@ -24,8 +25,8 @@ class ContactSectionState extends State<ContactSection> {
         messageController.text.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Por favor, completa todos los campos.'),
+          SnackBar(
+            content: Text(incompleteMessage(lenguaje)),
             backgroundColor: Colors.red,
           ),
         );
@@ -47,8 +48,8 @@ class ContactSectionState extends State<ContactSection> {
         debugPrint('Mapa añadido con éxito');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Formulario enviado correctamente.'),
+            SnackBar(
+              content: Text(completeMessage(lenguaje)),
               backgroundColor: Colors.green,
             ),
           );
@@ -84,7 +85,7 @@ class ContactSectionState extends State<ContactSection> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Contáctanos',
+                contactTitle(lenguaje),
                 style: GoogleFonts.roboto(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -94,7 +95,7 @@ class ContactSectionState extends State<ContactSection> {
               ),
               const SizedBox(height: 20),
               Text(
-                '¡Estamos listos para ayudarte! Envíanos tus dudas y estaremos encantados de responderte.',
+                contactSubtitle(lenguaje),
                 style: GoogleFonts.roboto(
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
@@ -109,31 +110,31 @@ class ContactSectionState extends State<ContactSection> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInputField(
-                      label: 'Tu nombre',
-                      hintText: 'Escribe tu nombre completo',
+                      label: nameLabel(lenguaje),
+                      hintText: nameHint(lenguaje),
                       icon: Icons.person,
                       controller: nameController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: 'Tu correo electrónico',
-                      hintText: 'Escribe tu correo electrónico',
+                      label: mailLabel(lenguaje),
+                      hintText: mailHint(lenguaje),
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
                       controller: emailController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: 'Tu teléfono',
-                      hintText: 'Escribe tu número de teléfono',
+                      label: phoneLabel(lenguaje),
+                      hintText: phoneHint(lenguaje),
                       icon: Icons.phone,
                       keyboardType: TextInputType.phone,
                       controller: phoneController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: 'Tu mensaje',
-                      hintText: 'Escribe tu mensaje aquí...',
+                      label: mailLabel(lenguaje),
+                      hintText: mailHint(lenguaje),
                       icon: Icons.message,
                       maxLines: 4,
                       controller: messageController,
@@ -153,7 +154,7 @@ class ContactSectionState extends State<ContactSection> {
                           shadowColor: color0.withOpacity(0.5),
                         ),
                         child: Text(
-                          'Enviar',
+                          sendButton(lenguaje),
                           style: GoogleFonts.roboto(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

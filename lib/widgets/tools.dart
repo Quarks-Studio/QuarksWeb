@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:quark_web/lenguajes.dart';
 import '../master.dart';
 
 class ToolsSection extends StatefulWidget {
@@ -49,7 +50,7 @@ class ToolsSectionState extends State<ToolsSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Herramientas con las que trabajamos',
+          toolsTitle(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 36,
             fontWeight: FontWeight.bold,
@@ -59,7 +60,7 @@ class ToolsSectionState extends State<ToolsSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Explora nuestras herramientas mas usadas',
+          toolsDescription(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 20,
             fontWeight: FontWeight.normal,
@@ -106,7 +107,7 @@ class ToolsSectionState extends State<ToolsSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Herramientas con las que trabajamos',
+          toolsTitle(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -116,7 +117,7 @@ class ToolsSectionState extends State<ToolsSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Explora nuestras herramientas mas usadas',
+          toolsDescription(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 16,
             fontWeight: FontWeight.normal,

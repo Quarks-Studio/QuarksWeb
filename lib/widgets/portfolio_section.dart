@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:quark_web/lenguajes.dart';
 import '../master.dart';
 
 class PortfolioSection extends StatefulWidget {
@@ -43,7 +44,7 @@ class PortfolioSectionState extends State<PortfolioSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Nuestros Proyectos',
+          portfolioTitle(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 36,
             fontWeight: FontWeight.bold,
@@ -53,7 +54,7 @@ class PortfolioSectionState extends State<PortfolioSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Explora nuestros trabajos más recientes',
+          portfolioBody(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 20,
             fontWeight: FontWeight.normal,
@@ -100,7 +101,7 @@ class PortfolioSectionState extends State<PortfolioSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Nuestros clientes',
+          portfolioTitle(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -110,7 +111,7 @@ class PortfolioSectionState extends State<PortfolioSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Explora nuestros trabajos más recientes',
+          portfolioBody(lenguaje),
           style: GoogleFonts.roboto(
             fontSize: 16,
             fontWeight: FontWeight.normal,

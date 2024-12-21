@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:quark_web/lenguajes.dart';
 import 'package:quark_web/master.dart';
 import '../widgets/header.dart';
 import '../widgets/introduction_section.dart';
@@ -48,10 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 150,
                 width: double.infinity,
                 color: color1,
-                child: const Center(
+                child: Center(
                   child: Text(
-                    'Menú',
-                    style: TextStyle(
+                    menu(lenguaje),
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: color0,
@@ -64,15 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    buildProfessionalDrawerButton('Nosotros', _keyIntroduction),
+                    buildProfessionalDrawerButton(nosotros(lenguaje), _keyIntroduction),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton('Servicios', _keyServices),
+                    buildProfessionalDrawerButton(servicios(lenguaje), _keyServices),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton('Herramientas', _keyTools),
+                    buildProfessionalDrawerButton(herramientas(lenguaje), _keyTools),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton('Clientes', _keyPortfolio),
+                    buildProfessionalDrawerButton(clientes(lenguaje), _keyPortfolio),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton('Contacto', _keyContact),
+                    buildProfessionalDrawerButton(contacto(lenguaje), _keyContact),
                   ],
                 ),
               ),

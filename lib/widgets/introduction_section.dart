@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quark_web/lenguajes.dart';
 import '../master.dart';
 
 class IntroductionSection extends StatefulWidget {
@@ -89,7 +90,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Deja el desarrollo en nuestras manos, enfócate en crecer',
+                    introductionTitle(lenguaje),
                     style: TextStyle(
                       fontSize: constraints.maxWidth > 800 ? 36 : 24,
                       fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'En Quarks Studio, transformamos tus ideas en soluciones digitales. Creación de apps móviles, web y software a medida, sin que tengas que preocuparte por el proceso técnico. ¡Nosotros nos encargamos del desarrollo, tú solo crece!',
+                    introductionBody(lenguaje),
                     style: TextStyle(
                       fontSize: constraints.maxWidth > 800 ? 20 : 16,
                       fontWeight: FontWeight.w400,
@@ -126,9 +127,9 @@ class IntroductionSectionState extends State<IntroductionSection>
                           color: color3,
                         ),
                       ),
-                      child: const Text(
-                        'Conoce nuestros servicios',
-                        style: TextStyle(
+                      child: Text(
+                        introductionButton(lenguaje),
+                        style: const TextStyle(
                           color: color3,
                           fontWeight: FontWeight.bold,
                         ),
@@ -164,7 +165,7 @@ class IntroductionSectionState extends State<IntroductionSection>
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Deja el desarrollo en nuestras manos, enfócate en crecer',
+          introductionTitle(lenguaje),
           style: TextStyle(
             fontSize: constraints.maxWidth > 600 ? 36 : 24,
             fontWeight: FontWeight.bold,
@@ -175,7 +176,7 @@ class IntroductionSectionState extends State<IntroductionSection>
         ),
         const SizedBox(height: 20),
         Text(
-          'En Quarks Studio, transformamos tus ideas en soluciones digitales. Creación de apps móviles, web y software a medida, sin que tengas que preocuparte por el proceso técnico. ¡Nosotros nos encargamos del desarrollo, tú solo crece!',
+          introductionBody(lenguaje),
           style: TextStyle(
             fontSize: constraints.maxWidth > 600 ? 20 : 16,
             fontWeight: FontWeight.w400,
@@ -204,9 +205,9 @@ class IntroductionSectionState extends State<IntroductionSection>
                 color: color3,
               ),
             ),
-            child: const Text(
-              'Conoce nuestros servicios',
-              style: TextStyle(
+            child: Text(
+              introductionButton(lenguaje),
+              style: const TextStyle(
                 color: color3,
                 fontWeight: FontWeight.bold,
               ),

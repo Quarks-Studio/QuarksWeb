@@ -8,6 +8,10 @@ const Color color2 = Color(0xFF68904D);
 const Color color3 = Color(0xFFDA6A00);
 //*- Paleta de colores -*\\
 
+//*- Determina el idioma de la página -*\\
+String lenguaje = 'EN';
+//*- Determina el idioma de la página -*\\
+
 //*- Boton Generico -*\\
 Widget buildHeaderButton(String title, GlobalKey key) {
   return TextButton(

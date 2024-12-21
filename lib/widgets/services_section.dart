@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quark_web/lenguajes.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../master.dart';
 
@@ -85,7 +86,7 @@ class ServicesSectionState extends State<ServicesSection>
             children: [
               const SizedBox(height: 20),
               Text(
-                "Nuestros Servicios",
+                seviceTitle(lenguaje),
                 style: GoogleFonts.roboto(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class ServicesSectionState extends State<ServicesSection>
               ),
               const SizedBox(height: 16),
               Text(
-                "Descubre nuestros servicios más destacados y cómo podemos ayudarte.",
+                serviceDescription(lenguaje),
                 style: GoogleFonts.roboto(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
@@ -113,9 +114,8 @@ class ServicesSectionState extends State<ServicesSection>
                 },
                 child: _buildService(
                   imagePath: 'assets/mobile_app.png',
-                  title: 'Creación de Apps Móviles',
-                  description:
-                      'Creamos aplicaciones móviles innovadoras y personalizadas para todas las plataformas, ayudándote a conectar con tu audiencia.',
+                  title: appMobileTitle(lenguaje),
+                  description: appMobileDescription(lenguaje),
                   isImageLeft: true,
                   offsetAnimation: _offsetAnimation1,
                   opacityAnimation: _opacityAnimation1,
@@ -131,9 +131,8 @@ class ServicesSectionState extends State<ServicesSection>
                 },
                 child: _buildService(
                   imagePath: 'assets/web_development.png',
-                  title: 'Desarrollo Web',
-                  description:
-                      'Diseñamos y desarrollamos sitios web modernos y funcionales que destacan en cualquier dispositivo.',
+                  title: webDevelopmentTitle(lenguaje),
+                  description: webDevelopmentDescription(lenguaje),
                   isImageLeft: false,
                   offsetAnimation: _offsetAnimation2,
                   opacityAnimation: _opacityAnimation2,
@@ -149,9 +148,8 @@ class ServicesSectionState extends State<ServicesSection>
                 },
                 child: _buildService(
                   imagePath: 'assets/software_development.png',
-                  title: 'Software a Medida',
-                  description:
-                      'Creamos soluciones de software personalizadas que se adaptan perfectamente a tus necesidades.',
+                  title: customSoftwareTitle(lenguaje),
+                  description: customSoftwareDescription(lenguaje),
                   isImageLeft: true,
                   offsetAnimation: _offsetAnimation3,
                   opacityAnimation: _opacityAnimation3,
