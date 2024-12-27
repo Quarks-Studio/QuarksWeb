@@ -10,7 +10,14 @@ const Color color3 = Color(0xFFDA6A00);
 
 //*- Determina el idioma de la página -*\\
 String lenguaje = 'EN';
+List<String> languages = ['EN', 'ES'];
 //*- Determina el idioma de la página -*\\
+
+//*- Cambia el idioma de la página -*\\
+void changeLanguage(String newLanguage) {
+  lenguaje = newLanguage;
+}
+//*- Cambia el idioma de la página -*\\
 
 //*- Boton Generico -*\\
 Widget buildHeaderButton(String title, GlobalKey key) {
@@ -41,4 +48,3 @@ void scrollToSection(GlobalKey key) {
   }
 }
   //*- Desplazamiento de sección -*\\
-

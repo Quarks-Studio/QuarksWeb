@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quark_web/lenguajes.dart';
 import '../master.dart';
 
@@ -11,6 +12,7 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
     required this.keyPortfolio,
     required this.keyContact,
     required this.keyTools,
+    required this.onChangeLanguage,
   });
 
   final ScrollController scrollController;
@@ -19,6 +21,7 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey keyPortfolio;
   final GlobalKey keyContact;
   final GlobalKey keyTools;
+  final void Function(String) onChangeLanguage;
 
   @override
   HeaderState createState() => HeaderState();
@@ -70,6 +73,7 @@ class HeaderState extends State<Header> {
                 buildHeaderButton(herramientas(lenguaje), widget.keyTools),
                 buildHeaderButton(clientes(lenguaje), widget.keyPortfolio),
                 buildHeaderButton(contacto(lenguaje), widget.keyContact),
+                buildLanguageMenu(),
               ],
             ),
           ],
@@ -84,10 +88,16 @@ class HeaderState extends State<Header> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset(
-          'assets/isologo.png',
-          height: 60,
+        Row(
+          children: [
+            Image.asset(
+              'assets/isologo.png',
+              height: 50,
+            ),
+          ],
         ),
+        const Spacer(),
+        buildLanguageMenu(),
         IconButton(
           icon: const Icon(Icons.menu, color: color0, size: 30),
           onPressed: () {
@@ -98,4 +108,64 @@ class HeaderState extends State<Header> {
     );
   }
   //*- Pantallas pequeñas -*\\
+
+  //*- Dropdown de idioma -*\\
+  Widget buildLanguageMenu() {
+    return PopupMenuButton<String>(
+      onSelected: (String language) {
+        if (lenguaje != language) {
+          setState(() {
+            lenguaje = language;
+            widget.onChangeLanguage(language);
+          });
+        }
+      },
+      icon: Row(
+        children: [
+          const Icon(Icons.language, color: color0),
+          const SizedBox(width: 5),
+          Text(
+            lenguaje,
+            style: GoogleFonts.roboto(
+              fontSize: 16,
+              color: color0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 5,
+      itemBuilder: (BuildContext context) {
+        return languages.map((String language) {
+          return PopupMenuItem<String>(
+            value: language,
+            child: Row(
+              children: [
+                Text(
+                  language,
+                  style: GoogleFonts.roboto(
+                    fontSize: 18,
+                    color: lenguaje == language ? color0 : Colors.black,
+                    fontWeight: lenguaje == language
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+                if (lenguaje == language)
+                  const Icon(
+                    Icons.check,
+                    color: Colors.green,
+                    size: 18,
+                  ),
+              ],
+            ),
+          );
+        }).toList();
+      },
+    );
+  }
+  //*- Dropdown de idioma -*\\
 }

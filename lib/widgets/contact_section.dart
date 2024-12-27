@@ -133,8 +133,8 @@ class ContactSectionState extends State<ContactSection> {
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: mailLabel(lenguaje),
-                      hintText: mailHint(lenguaje),
+                      label: msgLabel(lenguaje),
+                      hintText: msgHint(lenguaje),
                       icon: Icons.message,
                       maxLines: 4,
                       controller: messageController,

@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
         keyPortfolio: _keyPortfolio,
         keyContact: _keyContact,
         keyTools: _keyTools,
+        onChangeLanguage: _changeLanguage,
       ),
       endDrawer: Drawer(
         child: Container(
@@ -152,4 +153,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 //*- Método para crear botones del Drawer -*\\
+
+//*- Método para cambiar el idioma -*\\
+    void _changeLanguage(String newLanguage) {
+    setState(() {
+      changeLanguage(newLanguage);
+    });
+  }
+//*- Método para cambiar el idioma -*\\
 }
