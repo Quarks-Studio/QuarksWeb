@@ -9,13 +9,13 @@ const Color color3 = Color(0xFFDA6A00);
 //*- Paleta de colores -*\\
 
 //*- Determina el idioma de la página -*\\
-String lenguaje = 'EN';
+ValueNotifier<String> lenguaje = ValueNotifier<String>('ES');
 List<String> languages = ['EN', 'ES'];
 //*- Determina el idioma de la página -*\\
 
 //*- Cambia el idioma de la página -*\\
 void changeLanguage(String newLanguage) {
-  lenguaje = newLanguage;
+  lenguaje.value = newLanguage;
 }
 //*- Cambia el idioma de la página -*\\
 

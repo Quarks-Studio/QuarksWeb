@@ -90,7 +90,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    introductionTitle(lenguaje),
+                    introductionTitle(lenguaje.value),
                     style: TextStyle(
                       fontSize: constraints.maxWidth > 800 ? 36 : 24,
                       fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    introductionBody(lenguaje),
+                    introductionBody(lenguaje.value),
                     style: TextStyle(
                       fontSize: constraints.maxWidth > 800 ? 20 : 16,
                       fontWeight: FontWeight.w400,
@@ -120,7 +120,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                           borderRadius: BorderRadius.circular(30),
                         ),
                         elevation: 10,
-                        shadowColor: color0.withOpacity(0.5),
+                        shadowColor: color0.withValues(alpha:0.5),
                         textStyle: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -128,7 +128,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                         ),
                       ),
                       child: Text(
-                        introductionButton(lenguaje),
+                        introductionButton(lenguaje.value),
                         style: const TextStyle(
                           color: color3,
                           fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class IntroductionSectionState extends State<IntroductionSection>
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          introductionTitle(lenguaje),
+          introductionTitle(lenguaje.value),
           style: TextStyle(
             fontSize: constraints.maxWidth > 600 ? 36 : 24,
             fontWeight: FontWeight.bold,
@@ -176,7 +176,7 @@ class IntroductionSectionState extends State<IntroductionSection>
         ),
         const SizedBox(height: 20),
         Text(
-          introductionBody(lenguaje),
+          introductionBody(lenguaje.value),
           style: TextStyle(
             fontSize: constraints.maxWidth > 600 ? 20 : 16,
             fontWeight: FontWeight.w400,
@@ -198,7 +198,7 @@ class IntroductionSectionState extends State<IntroductionSection>
                 borderRadius: BorderRadius.circular(30),
               ),
               elevation: 10,
-              shadowColor: color0.withOpacity(0.5),
+              shadowColor: color0.withValues(alpha:0.5),
               textStyle: TextStyle(
                 fontSize: constraints.maxWidth > 600 ? 22 : 18,
                 fontWeight: FontWeight.bold,
@@ -206,7 +206,7 @@ class IntroductionSectionState extends State<IntroductionSection>
               ),
             ),
             child: Text(
-              introductionButton(lenguaje),
+              introductionButton(lenguaje.value),
               style: const TextStyle(
                 color: color3,
                 fontWeight: FontWeight.bold,

@@ -50,7 +50,7 @@ class ToolsSectionState extends State<ToolsSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          toolsTitle(lenguaje),
+          toolsTitle(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 36,
             fontWeight: FontWeight.bold,
@@ -60,11 +60,11 @@ class ToolsSectionState extends State<ToolsSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          toolsDescription(lenguaje),
+          toolsDescription(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 20,
             fontWeight: FontWeight.normal,
-            color: color0.withOpacity(0.7),
+            color: color0.withValues(alpha:0.7),
           ),
           textAlign: TextAlign.center,
         ),
@@ -107,7 +107,7 @@ class ToolsSectionState extends State<ToolsSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          toolsTitle(lenguaje),
+          toolsTitle(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -117,11 +117,11 @@ class ToolsSectionState extends State<ToolsSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          toolsDescription(lenguaje),
+          toolsDescription(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 16,
             fontWeight: FontWeight.normal,
-            color: color0.withOpacity(0.7),
+            color: color0.withValues(alpha:0.7),
           ),
           textAlign: TextAlign.center,
         ),

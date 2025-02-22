@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         indicatorColor: color3,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: color3,
-          selectionColor: color3.withOpacity(0.3),
+          selectionColor: color3.withValues(alpha:0.3),
           selectionHandleColor: color3,
         ),
       ),

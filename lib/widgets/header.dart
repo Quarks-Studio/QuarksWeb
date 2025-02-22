@@ -66,15 +66,20 @@ class HeaderState extends State<Header> {
               height: 60,
             ),
             const Expanded(child: SizedBox()),
-            Row(
-              children: [
-                buildHeaderButton(nosotros(lenguaje), widget.keyIntroduction),
-                buildHeaderButton(servicios(lenguaje), widget.keyServices),
-                buildHeaderButton(herramientas(lenguaje), widget.keyTools),
-                buildHeaderButton(clientes(lenguaje), widget.keyPortfolio),
-                buildHeaderButton(contacto(lenguaje), widget.keyContact),
-                buildLanguageMenu(),
-              ],
+            ValueListenableBuilder<String>(
+              valueListenable: lenguaje,
+              builder: (context, value, child) {
+                return Row(
+                  children: [
+                    buildHeaderButton(nosotros(value), widget.keyIntroduction),
+                    buildHeaderButton(servicios(value), widget.keyServices),
+                    buildHeaderButton(herramientas(value), widget.keyTools),
+                    buildHeaderButton(clientes(value), widget.keyPortfolio),
+                    buildHeaderButton(contacto(value), widget.keyContact),
+                    buildLanguageMenu(),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -110,55 +115,72 @@ class HeaderState extends State<Header> {
   //*- Pantallas pequeñas -*\\
 
   //*- Dropdown de idioma -*\\
-  Widget buildLanguageMenu() {
+   Widget buildLanguageMenu() {
     return PopupMenuButton<String>(
       onSelected: (String language) {
-        if (lenguaje != language) {
-          setState(() {
-            lenguaje = language;
-            widget.onChangeLanguage(language);
-          });
+        if (lenguaje.value != language) {
+          changeLanguage(language);
+          widget.onChangeLanguage(language);
         }
       },
       icon: Row(
         children: [
           const Icon(Icons.language, color: color0),
           const SizedBox(width: 5),
-          Text(
-            lenguaje,
-            style: GoogleFonts.roboto(
-              fontSize: 16,
-              color: color0,
-              fontWeight: FontWeight.bold,
-            ),
+          ValueListenableBuilder<String>(
+            valueListenable: lenguaje,
+            builder: (context, value, child) {
+              return Text(
+                value.toUpperCase(),
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: color0,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
         ],
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
       ),
-      elevation: 5,
+      elevation: 8,
+      color: Colors.white,
       itemBuilder: (BuildContext context) {
         return languages.map((String language) {
           return PopupMenuItem<String>(
             value: language,
             child: Row(
               children: [
-                Text(
-                  language,
-                  style: GoogleFonts.roboto(
-                    fontSize: 18,
-                    color: lenguaje == language ? color0 : Colors.black,
-                    fontWeight: lenguaje == language
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                ClipRRect(
+                 
+                  child: Image.asset(
+                    'assets/${language.toLowerCase()}.png',
+                    width: 24,
+                    height: 16,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                if (lenguaje == language)
-                  const Icon(
-                    Icons.check,
-                    color: Colors.green,
-                    size: 18,
+                const SizedBox(width: 10),
+                Text(
+                  language,
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: lenguaje.value == language
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color: lenguaje.value == language ? Colors.blue : Colors.black,
+                  ),
+                ),
+                if (lenguaje.value == language)
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 20,
+                    ),
                   ),
               ],
             ),
@@ -166,6 +188,5 @@ class HeaderState extends State<Header> {
         }).toList();
       },
     );
-  }
-  //*- Dropdown de idioma -*\\
+  }//*- Dropdown de idioma -*\\
 }

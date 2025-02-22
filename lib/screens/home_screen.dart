@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: color1,
                 child: Center(
                   child: Text(
-                    menu(lenguaje),
+                    menu(lenguaje.value),
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -66,15 +66,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    buildProfessionalDrawerButton(nosotros(lenguaje), _keyIntroduction),
+                    buildProfessionalDrawerButton(nosotros(lenguaje.value), _keyIntroduction),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(servicios(lenguaje), _keyServices),
+                    buildProfessionalDrawerButton(servicios(lenguaje.value), _keyServices),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(herramientas(lenguaje), _keyTools),
+                    buildProfessionalDrawerButton(herramientas(lenguaje.value), _keyTools),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(clientes(lenguaje), _keyPortfolio),
+                    buildProfessionalDrawerButton(clientes(lenguaje.value), _keyPortfolio),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(contacto(lenguaje), _keyContact),
+                    buildProfessionalDrawerButton(contacto(lenguaje.value), _keyContact),
                   ],
                 ),
               ),
@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha:0.2),
                 blurRadius: 6,
                 offset: const Offset(2, 4),
               ),

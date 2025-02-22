@@ -47,3 +47,5 @@ flutter:
     - assets/androidLogo.png
     - assets/iosLogo.png
     - assets/pythonLogo.webp
+    - assets/en.png
+    - assets/es.png

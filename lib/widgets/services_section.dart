@@ -86,7 +86,7 @@ class ServicesSectionState extends State<ServicesSection>
             children: [
               const SizedBox(height: 20),
               Text(
-                seviceTitle(lenguaje),
+                seviceTitle(lenguaje.value),
                 style: GoogleFonts.roboto(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -96,11 +96,11 @@ class ServicesSectionState extends State<ServicesSection>
               ),
               const SizedBox(height: 16),
               Text(
-                serviceDescription(lenguaje),
+                serviceDescription(lenguaje.value),
                 style: GoogleFonts.roboto(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
-                  color: color0.withOpacity(0.7),
+                  color: color0.withValues(alpha:0.7),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -114,8 +114,8 @@ class ServicesSectionState extends State<ServicesSection>
                 },
                 child: _buildService(
                   imagePath: 'assets/mobile_app.png',
-                  title: appMobileTitle(lenguaje),
-                  description: appMobileDescription(lenguaje),
+                  title: appMobileTitle(lenguaje.value),
+                  description: appMobileDescription(lenguaje.value),
                   isImageLeft: true,
                   offsetAnimation: _offsetAnimation1,
                   opacityAnimation: _opacityAnimation1,
@@ -131,8 +131,8 @@ class ServicesSectionState extends State<ServicesSection>
                 },
                 child: _buildService(
                   imagePath: 'assets/web_development.png',
-                  title: webDevelopmentTitle(lenguaje),
-                  description: webDevelopmentDescription(lenguaje),
+                  title: webDevelopmentTitle(lenguaje.value),
+                  description: webDevelopmentDescription(lenguaje.value),
                   isImageLeft: false,
                   offsetAnimation: _offsetAnimation2,
                   opacityAnimation: _opacityAnimation2,
@@ -148,8 +148,8 @@ class ServicesSectionState extends State<ServicesSection>
                 },
                 child: _buildService(
                   imagePath: 'assets/software_development.png',
-                  title: customSoftwareTitle(lenguaje),
-                  description: customSoftwareDescription(lenguaje),
+                  title: customSoftwareTitle(lenguaje.value),
+                  description: customSoftwareDescription(lenguaje.value),
                   isImageLeft: true,
                   offsetAnimation: _offsetAnimation3,
                   opacityAnimation: _opacityAnimation3,

@@ -44,7 +44,7 @@ class PortfolioSectionState extends State<PortfolioSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          portfolioTitle(lenguaje),
+          portfolioTitle(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 36,
             fontWeight: FontWeight.bold,
@@ -54,11 +54,11 @@ class PortfolioSectionState extends State<PortfolioSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          portfolioBody(lenguaje),
+          portfolioBody(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 20,
             fontWeight: FontWeight.normal,
-            color: color0.withOpacity(0.7),
+            color: color0.withValues(alpha:0.7),
           ),
           textAlign: TextAlign.center,
         ),
@@ -101,7 +101,7 @@ class PortfolioSectionState extends State<PortfolioSection> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          portfolioTitle(lenguaje),
+          portfolioTitle(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -111,11 +111,11 @@ class PortfolioSectionState extends State<PortfolioSection> {
         ),
         const SizedBox(height: 16),
         Text(
-          portfolioBody(lenguaje),
+          portfolioBody(lenguaje.value),
           style: GoogleFonts.roboto(
             fontSize: 16,
             fontWeight: FontWeight.normal,
-            color: color0.withOpacity(0.7),
+            color: color0.withValues(alpha:0.7),
           ),
           textAlign: TextAlign.center,
         ),

@@ -26,7 +26,7 @@ class ContactSectionState extends State<ContactSection> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(incompleteMessage(lenguaje)),
+            content: Text(incompleteMessage(lenguaje.value)),
             backgroundColor: Colors.red,
           ),
         );
@@ -49,7 +49,7 @@ class ContactSectionState extends State<ContactSection> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(completeMessage(lenguaje)),
+              content: Text(completeMessage(lenguaje.value)),
               backgroundColor: Colors.green,
             ),
           );
@@ -85,7 +85,7 @@ class ContactSectionState extends State<ContactSection> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                contactTitle(lenguaje),
+                contactTitle(lenguaje.value),
                 style: GoogleFonts.roboto(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -95,11 +95,11 @@ class ContactSectionState extends State<ContactSection> {
               ),
               const SizedBox(height: 20),
               Text(
-                contactSubtitle(lenguaje),
+                contactSubtitle(lenguaje.value),
                 style: GoogleFonts.roboto(
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
-                  color: color0.withOpacity(0.7),
+                  color: color0.withValues(alpha:0.7),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -110,31 +110,31 @@ class ContactSectionState extends State<ContactSection> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInputField(
-                      label: nameLabel(lenguaje),
-                      hintText: nameHint(lenguaje),
+                      label: nameLabel(lenguaje.value),
+                      hintText: nameHint(lenguaje.value),
                       icon: Icons.person,
                       controller: nameController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: mailLabel(lenguaje),
-                      hintText: mailHint(lenguaje),
+                      label: mailLabel(lenguaje.value),
+                      hintText: mailHint(lenguaje.value),
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
                       controller: emailController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: phoneLabel(lenguaje),
-                      hintText: phoneHint(lenguaje),
+                      label: phoneLabel(lenguaje.value),
+                      hintText: phoneHint(lenguaje.value),
                       icon: Icons.phone,
                       keyboardType: TextInputType.phone,
                       controller: phoneController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputField(
-                      label: msgLabel(lenguaje),
-                      hintText: msgHint(lenguaje),
+                      label: mailLabel(lenguaje.value),
+                      hintText: mailHint(lenguaje.value),
                       icon: Icons.message,
                       maxLines: 4,
                       controller: messageController,
@@ -151,10 +151,10 @@ class ContactSectionState extends State<ContactSection> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           elevation: 10,
-                          shadowColor: color0.withOpacity(0.5),
+                          shadowColor: color0.withValues(alpha:0.5),
                         ),
                         child: Text(
-                          sendButton(lenguaje),
+                          sendButton(lenguaje.value),
                           style: GoogleFonts.roboto(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -190,19 +190,19 @@ class ContactSectionState extends State<ContactSection> {
         prefixIcon: Icon(icon, color: color0),
         labelText: label,
         labelStyle: GoogleFonts.roboto(
-          color: color0.withOpacity(0.7),
+          color: color0.withValues(alpha:0.7),
           fontSize: 18,
         ),
         hintText: hintText,
         hintStyle: GoogleFonts.roboto(
-          color: color0.withOpacity(0.5),
+          color: color0.withValues(alpha:0.5),
           fontSize: 16,
         ),
         filled: true,
-        fillColor: color3.withOpacity(0.1),
+        fillColor: color3.withValues(alpha:0.1),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(color: color0.withOpacity(0.5), width: 1),
+          borderSide: BorderSide(color: color0.withValues(alpha:0.5), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
