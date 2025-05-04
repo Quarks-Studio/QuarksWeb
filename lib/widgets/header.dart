@@ -115,7 +115,7 @@ class HeaderState extends State<Header> {
   //*- Pantallas pequeñas -*\\
 
   //*- Dropdown de idioma -*\\
-   Widget buildLanguageMenu() {
+  Widget buildLanguageMenu() {
     return PopupMenuButton<String>(
       onSelected: (String language) {
         if (lenguaje.value != language) {
@@ -154,7 +154,6 @@ class HeaderState extends State<Header> {
             child: Row(
               children: [
                 ClipRRect(
-                 
                   child: Image.asset(
                     'assets/${language.toLowerCase()}.png',
                     width: 24,
@@ -170,7 +169,8 @@ class HeaderState extends State<Header> {
                     fontWeight: lenguaje.value == language
                         ? FontWeight.bold
                         : FontWeight.normal,
-                    color: lenguaje.value == language ? Colors.blue : Colors.black,
+                    color:
+                        lenguaje.value == language ? Colors.blue : Colors.black,
                   ),
                 ),
                 if (lenguaje.value == language)
@@ -188,5 +188,5 @@ class HeaderState extends State<Header> {
         }).toList();
       },
     );
-  }//*- Dropdown de idioma -*\\
+  } //*- Dropdown de idioma -*\\
 }

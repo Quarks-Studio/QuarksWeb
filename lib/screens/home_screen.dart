@@ -1,5 +1,7 @@
+// lib/screens/home_screen.dart
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quark_web/lenguajes.dart';
 import 'package:quark_web/master.dart';
 import '../widgets/header.dart';
@@ -12,7 +14,13 @@ import '../widgets/tools.dart';
 
 class HomeScreen extends StatefulWidget {
   final FirebaseAnalytics analytics;
-  const HomeScreen({super.key, required this.analytics});
+  final String localeCode; // 'en' o 'es'
+
+  const HomeScreen({
+    super.key,
+    required this.analytics,
+    required this.localeCode,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,12 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey _keyPortfolio = GlobalKey();
   final GlobalKey _keyContact = GlobalKey();
   final GlobalKey _keyTools = GlobalKey();
-
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    // Establece el idioma inicial según la ruta
+    changeLanguage(widget.localeCode);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    widget.analytics.logScreenView(screenName: 'Home Screen');
+    widget.analytics
+        .logScreenView(screenName: 'Home Screen (${widget.localeCode})');
     return Scaffold(
       backgroundColor: color1,
       appBar: Header(
@@ -66,15 +81,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    buildProfessionalDrawerButton(nosotros(lenguaje.value), _keyIntroduction),
+                    buildProfessionalDrawerButton(
+                        nosotros(lenguaje.value), _keyIntroduction),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(servicios(lenguaje.value), _keyServices),
+                    buildProfessionalDrawerButton(
+                        servicios(lenguaje.value), _keyServices),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(herramientas(lenguaje.value), _keyTools),
+                    buildProfessionalDrawerButton(
+                        herramientas(lenguaje.value), _keyTools),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(clientes(lenguaje.value), _keyPortfolio),
+                    buildProfessionalDrawerButton(
+                        clientes(lenguaje.value), _keyPortfolio),
                     const SizedBox(height: 10),
-                    buildProfessionalDrawerButton(contacto(lenguaje.value), _keyContact),
+                    buildProfessionalDrawerButton(
+                        contacto(lenguaje.value), _keyContact),
                   ],
                 ),
               ),
@@ -98,9 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IntroductionSection(
               key: _keyIntroduction,
-              onGoToServices: () {
-                scrollToSection(_keyServices);
-              },
+              onGoToServices: () => scrollToSection(_keyServices),
             ),
             ServicesSection(key: _keyServices),
             ToolsSection(key: _keyTools),
@@ -113,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-//*- Método para crear botones del Drawer -*\\
+  // Construye botón en Drawer (igual que antes)
   Widget buildProfessionalDrawerButton(String label, GlobalKey key) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -131,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha:0.2),
+                color: Colors.black.withAlpha(50),
                 blurRadius: 6,
                 offset: const Offset(2, 4),
               ),
@@ -152,13 +170,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-//*- Método para crear botones del Drawer -*\\
 
-//*- Método para cambiar el idioma -*\\
-    void _changeLanguage(String newLanguage) {
+  // Cambio de idioma y navegación
+  void _changeLanguage(String newLanguage) {
     setState(() {
       changeLanguage(newLanguage);
     });
+    if (newLanguage == 'es') {
+      context.go('/es');
+    } else {
+      context.go('/');
+    }
   }
-//*- Método para cambiar el idioma -*\\
 }

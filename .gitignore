@@ -35,6 +35,11 @@ firestore.rules
 .pub-cache/
 .pub/
 /build/
+android/
+ios/
+linux/
+macos/
+windows/
 
 # Symbolication related
 app.*.symbols
