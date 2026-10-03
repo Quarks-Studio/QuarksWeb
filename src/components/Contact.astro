@@ -1,0 +1,459 @@
+---
+import { Icon } from "astro-icon/components";
+import { ui, type Lang } from "../i18n/strings";
+import { SITE } from "../data/site";
+
+interface Props {
+    lang: Lang;
+}
+
+const t = ui[Astro.props.lang].contact;
+
+const info = [
+    {
+        icon: "fa6-solid:envelope",
+        label: "Email",
+        value: SITE.email,
+        href: `mailto:${SITE.email}`,
+    },
+    {
+        icon: "fa6-brands:whatsapp",
+        label: "WhatsApp",
+        value: SITE.phone,
+        href: SITE.whatsapp,
+    },
+    {
+        icon: "fa6-solid:location-dot",
+        label: t.location,
+        value: SITE.location,
+        href: undefined,
+    },
+];
+---
+
+<section id="contact" class="section">
+    <div class="container grid">
+        <div class="info">
+            <h2 class="pre-line">{t.title}</h2>
+            <p class="subtitle">{t.subtitle}</p>
+
+            <ul class="items">
+                {
+                    info.map((it) => (
+                        <li>
+                            <span class="item-icon">
+                                <Icon name={it.icon} class="ico" />
+                            </span>
+                            <div class="item-text">
+                                <span class="label">{it.label}</span>
+                                {it.href ? (
+                                    <a
+                                        href={it.href}
+                                        class="value"
+                                        target={
+                                            it.href.startsWith("http")
+                                                ? "_blank"
+                                                : undefined
+                                        }
+                                        rel={
+                                            it.href.startsWith("http")
+                                                ? "noopener"
+                                                : undefined
+                                        }
+                                    >
+                                        {it.value}
+                                    </a>
+                                ) : (
+                                    <span class="value">{it.value}</span>
+                                )}
+                            </div>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <form
+            class="card"
+            novalidate
+            data-contact-form
+            data-msg-incomplete={t.incomplete}
+            data-msg-success={t.success}
+            data-msg-error={t.error}
+        >
+            <div class="row">
+                <div class="field">
+                    <label for="cf-name">{t.nameLabel}</label>
+                    <input
+                        id="cf-name"
+                        name="name"
+                        type="text"
+                        autocomplete="name"
+                        placeholder={t.nameHint}
+                        required
+                        maxlength="100"
+                    />
+                </div>
+                <div class="field">
+                    <label for="cf-phone">{t.phoneLabel}</label>
+                    <input
+                        id="cf-phone"
+                        name="phone"
+                        type="tel"
+                        inputmode="tel"
+                        autocomplete="tel"
+                        placeholder={t.phoneHint}
+                        required
+                        maxlength="40"
+                    />
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="cf-email">{t.mailLabel}</label>
+                <input
+                    id="cf-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder={t.mailHint}
+                    required
+                    maxlength="150"
+                />
+            </div>
+
+            <div class="field">
+                <label for="cf-message">{t.msgLabel}</label>
+                <textarea
+                    id="cf-message"
+                    name="message"
+                    rows="5"
+                    placeholder={t.msgHint}
+                    required
+                    maxlength="2000"></textarea>
+            </div>
+
+            <!-- Honeypot: invisible para personas, los bots lo completan -->
+            <div class="hp" aria-hidden="true">
+                <label
+                    >Website <input
+                        name="website"
+                        type="text"
+                        tabindex="-1"
+                        autocomplete="off"
+                    /></label
+                >
+            </div>
+
+            <button type="submit" class="submit">
+                <span class="btn-label">{t.send}</span>
+                <span class="spinner" aria-hidden="true"></span>
+            </button>
+        </form>
+    </div>
+
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+</section>
+
+<script>
+    const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+    const toast = document.querySelector<HTMLElement>("[data-toast]");
+    let toastTimer: number | undefined;
+
+    const showToast = (msg: string, kind: "success" | "error") => {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.dataset.kind = kind;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(
+            () => toast.classList.remove("show"),
+            4000,
+        );
+    };
+
+    form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const {
+            msgIncomplete = "",
+            msgSuccess = "",
+            msgError = "",
+        } = form.dataset;
+        const data = new FormData(form);
+        const get = (k: string) => String(data.get(k) ?? "").trim();
+
+        // Bot → simulamos éxito y no escribimos nada
+        if (get("website")) {
+            form.reset();
+            showToast(msgSuccess, "success");
+            return;
+        }
+
+        // Validación (equivalente al chequeo de campos vacíos de Flutter + email válido)
+        const required = [
+            ...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+                "[required]",
+            ),
+        ];
+        const firstInvalid = required.find(
+            (el) => !el.value.trim() || !el.checkValidity(),
+        );
+        if (firstInvalid) {
+            showToast(msgIncomplete, "error");
+            firstInvalid.focus();
+            return;
+        }
+
+        const btn = form.querySelector<HTMLButtonElement>(
+            'button[type="submit"]',
+        );
+        form.setAttribute("aria-busy", "true");
+        if (btn) btn.disabled = true;
+
+        try {
+            const { sendConsulta } = await import("../lib/contact");
+            await sendConsulta({
+                nombre: get("name"),
+                mail: get("email"),
+                numero: get("phone"),
+                mensaje: get("message"),
+            });
+            form.reset();
+            showToast(msgSuccess, "success");
+            (window as any).gtag?.("event", "generate_lead");
+        } catch (err) {
+            console.error(err);
+            showToast(msgError, "error");
+        } finally {
+            form.removeAttribute("aria-busy");
+            if (btn) btn.disabled = false;
+        }
+    });
+</script>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: 4fr 5fr;
+        gap: 60px;
+        align-items: start;
+    }
+    .info {
+        padding-top: 8px;
+    }
+
+    h2 {
+        margin: 0 0 20px;
+        font-size: 42px;
+        font-weight: 900;
+        line-height: 1.1;
+    }
+    .subtitle {
+        margin: 0 0 44px;
+        font-size: 15px;
+        line-height: 1.65;
+        color: rgb(var(--text-rgb) / 0.6);
+    }
+
+    .items {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .items li {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .item-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgb(var(--text-rgb) / 0.06);
+        border: 1px solid rgb(var(--text-rgb) / 0.1);
+        color: rgb(var(--text-rgb) / 0.8);
+    }
+    .ico {
+        width: 18px;
+        height: 18px;
+    }
+    .item-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+    .label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: rgb(var(--text-rgb) / 0.4);
+    }
+    .value {
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+    }
+    a.value:hover {
+        color: var(--orange);
+    }
+
+    /* Formulario */
+    .card {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 32px;
+        border-radius: 20px;
+        border: 1px solid var(--orange);
+        background: rgb(var(--text-rgb) / 0.03);
+    }
+    .row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px 16px;
+    }
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgb(var(--text-rgb) / 0.75);
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 10px;
+        border: 1px solid rgb(var(--text-rgb) / 0.15);
+        background: rgb(var(--text-rgb) / 0.04);
+        color: var(--text);
+        font: inherit;
+        font-size: 14px;
+        caret-color: var(--orange);
+        transition:
+            border-color 0.2s,
+            box-shadow 0.2s;
+    }
+    textarea {
+        resize: vertical;
+        min-height: 130px;
+    }
+    input::placeholder,
+    textarea::placeholder {
+        color: rgb(var(--text-rgb) / 0.35);
+    }
+    input:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--orange);
+        box-shadow: 0 0 0 1px var(--orange);
+    }
+
+    .hp {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+
+    .submit {
+        display: grid;
+        place-items: center;
+        height: 52px;
+        margin-top: 8px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--blue);
+        color: #fff;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+            filter 0.2s,
+            opacity 0.2s;
+    }
+    .submit:hover {
+        filter: brightness(1.15);
+    }
+    .submit:disabled {
+        opacity: 0.5;
+        cursor: progress;
+    }
+    .spinner {
+        display: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2.5px solid rgb(255 255 255 / 0.3);
+        border-top-color: #fff;
+        animation: spin 0.8s linear infinite;
+    }
+    form[aria-busy="true"] .btn-label {
+        display: none;
+    }
+    form[aria-busy="true"] .spinner {
+        display: block;
+    }
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Toast (ex SnackBar) */
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        z-index: 100;
+        max-width: calc(100vw - 32px);
+        padding: 14px 20px;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 14px;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+        opacity: 0;
+        transform: translate(-50%, 150%);
+        transition:
+            transform 0.3s ease,
+            opacity 0.3s ease;
+        pointer-events: none;
+    }
+    .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    .toast[data-kind="success"] {
+        background: #2e7d32;
+    }
+    .toast[data-kind="error"] {
+        background: #c62828;
+    }
+
+    @media (max-width: 800px) {
+        .grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        h2 {
+            font-size: 32px;
+        }
+        .card {
+            padding: 20px;
+        }
+    }
+</style>

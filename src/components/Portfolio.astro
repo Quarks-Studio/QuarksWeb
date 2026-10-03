@@ -1,0 +1,376 @@
+---
+import { Image } from "astro:assets";
+import { ui, type Lang } from "../i18n/strings";
+import { projects, projectImages, ACCENTS } from "../data/projects";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<section id="clients" class="section">
+    <div class="container">
+        <div class="head">
+            <div>
+                <span class="tag">{t.portfolio.tag}</span>
+                <h2 class="pre-line">{t.portfolio.title}</h2>
+            </div>
+            <p class="subtitle pre-line">{t.portfolio.subtitle}</p>
+        </div>
+
+        <div class="projects">
+            {
+                projects.map((p, i) => {
+                    const images = projectImages(p.slug);
+                    return (
+                        <article
+                            class:list={[
+                                "project",
+                                "reveal",
+                                { reverse: i % 2 === 1 },
+                            ]}
+                            style={`--accent: ${ACCENTS[p.accent]}`}
+                        >
+                            <div class="carousel" data-carousel>
+                                <div class="box">
+                                    <div class="slides" data-track>
+                                        {images.map((img, j) => (
+                                            <div class="slide">
+                                                <Image
+                                                    src={img}
+                                                    alt={`${p.name} — ${j + 1}`}
+                                                    widths={[400, 700, 1000]}
+                                                    sizes="(max-width: 800px) 92vw, 640px"
+                                                    class="shot"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {images.length > 1 && (
+                                    <div class="dots">
+                                        {images.map((_, j) => (
+                                            <button
+                                                type="button"
+                                                class="dot"
+                                                data-dot
+                                                aria-label={`${p.name} ${j + 1}`}
+                                                aria-current={
+                                                    j === 0 ? "true" : "false"
+                                                }
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div class="info">
+                                <div class="meta">
+                                    <span class="badge">
+                                        {p.category[lang]}
+                                    </span>
+                                    <span class="num">
+                                        / {String(i + 1).padStart(2, "0")}
+                                    </span>
+                                </div>
+                                <h3>{p.name}</h3>
+                                <p class="desc">{p.description[lang]}</p>
+                                <ul class="tags">
+                                    {p.tags[lang].map((tag) => (
+                                        <li>{tag}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </article>
+                    );
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    document
+        .querySelectorAll<HTMLElement>("[data-carousel]")
+        .forEach((root) => {
+            const track = root.querySelector<HTMLElement>("[data-track]");
+            if (!track) return;
+            const dots = [
+                ...root.querySelectorAll<HTMLButtonElement>("[data-dot]"),
+            ];
+            const count = dots.length;
+
+            let index = 0;
+            let timer: number | undefined;
+            let visible = false;
+            let hovered = false;
+
+            const setActive = (i: number) => {
+                index = i;
+                dots.forEach((d, j) =>
+                    d.setAttribute("aria-current", String(i === j)),
+                );
+            };
+
+            const goTo = (i: number) => {
+                // scrollTo sobre el track: mueve el carrusel, nunca la página
+                track.scrollTo({
+                    left: i * track.clientWidth,
+                    behavior: "smooth",
+                });
+                setActive(i);
+            };
+
+            const stop = () => {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = undefined;
+                }
+            };
+            const start = () => {
+                if (reduceMotion || count < 2 || timer || !visible || hovered)
+                    return;
+                timer = window.setInterval(
+                    () => goTo((index + 1) % count),
+                    4000,
+                );
+            };
+
+            // Swipe / scroll manual → actualizar dots
+            track.addEventListener(
+                "scroll",
+                () => {
+                    const i = Math.round(track.scrollLeft / track.clientWidth);
+                    if (i !== index) setActive(i);
+                },
+                { passive: true },
+            );
+
+            dots.forEach((d, i) =>
+                d.addEventListener("click", () => {
+                    goTo(i);
+                    stop();
+                    start();
+                }),
+            );
+
+            root.addEventListener("mouseenter", () => {
+                hovered = true;
+                stop();
+            });
+            root.addEventListener("mouseleave", () => {
+                hovered = false;
+                start();
+            });
+
+            // Autoplay solo cuando el carrusel está en pantalla
+            new IntersectionObserver(([entry]) => {
+                visible = entry.isIntersecting;
+                if (visible) start();
+                else stop();
+            }).observe(root);
+        });
+</script>
+
+<style>
+    .head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 60px;
+        margin-bottom: 80px;
+    }
+    .tag {
+        display: block;
+        margin-bottom: 16px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        color: var(--orange);
+    }
+    h2 {
+        margin: 0;
+        font-size: 52px;
+        font-weight: 900;
+        line-height: 1.05;
+    }
+    .subtitle {
+        flex-shrink: 0;
+        width: 280px;
+        margin: 0;
+        text-align: right;
+        font-size: 18px;
+        line-height: 1.6;
+        color: rgb(var(--text-rgb) / 0.55);
+    }
+
+    .projects {
+        display: flex;
+        flex-direction: column;
+        gap: 80px;
+    }
+    .project {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+    }
+    .project.reverse {
+        flex-direction: row-reverse;
+    }
+    .carousel {
+        flex: 5;
+        min-width: 0;
+    }
+    .info {
+        flex: 4;
+        min-width: 0;
+    }
+
+    /* Carrusel */
+    .box {
+        height: 320px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1.5px solid color-mix(in srgb, var(--accent) 20%, transparent);
+        background: var(
+            --project-card-bg,
+            color-mix(in srgb, var(--accent) 6%, transparent)
+        );
+    }
+    .slides {
+        display: flex;
+        height: 100%;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+    }
+    .slides::-webkit-scrollbar {
+        display: none;
+    }
+    .slide {
+        flex: 0 0 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        scroll-snap-align: start;
+    }
+    .shot {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 14px;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        border: 0;
+        border-radius: 4px;
+        background: color-mix(in srgb, var(--accent) 25%, transparent);
+        cursor: pointer;
+        transition:
+            width 0.3s ease-out,
+            background-color 0.3s;
+    }
+    .dot[aria-current="true"] {
+        width: 24px;
+        background: var(--accent);
+    }
+
+    /* Info */
+    .meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1.5px solid var(--accent);
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+    .num {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgb(var(--text-rgb) / 0.35);
+    }
+    h3 {
+        margin: 0 0 14px;
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+    .desc {
+        margin: 0 0 22px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: rgb(var(--text-rgb) / 0.65);
+    }
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .tags li {
+        padding: 8px 14px;
+        border-radius: 20px;
+        border: 1px solid rgb(var(--text-rgb) / 0.15);
+        background: rgb(var(--text-rgb) / 0.05);
+        color: rgb(var(--text-rgb) / 0.75);
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    @media (max-width: 800px) {
+        .head {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        .tag {
+            margin-bottom: 12px;
+        }
+        h2 {
+            font-size: 34px;
+            line-height: 1.1;
+        }
+        .subtitle {
+            width: auto;
+            text-align: left;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .project,
+        .project.reverse {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 28px;
+        }
+    }
+    @media (max-width: 600px) {
+        .box {
+            height: 220px;
+        }
+    }
+</style>

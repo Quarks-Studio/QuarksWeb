@@ -1,0 +1,119 @@
+---
+import { Image } from "astro:assets";
+import { ui, type Lang } from "../i18n/strings";
+import office from "../assets/misc/office.png";
+
+interface Props {
+    lang: Lang;
+}
+
+const t = ui[Astro.props.lang];
+---
+
+<section id="about" class="intro">
+    <div class="container intro-grid">
+        <div class="intro-text">
+            <h1>{t.intro.title}</h1>
+            <p>{t.intro.body}</p>
+            <a href="#services" class="cta">{t.intro.cta}</a>
+        </div>
+        <div class="intro-media">
+            <Image
+                src={office}
+                alt=""
+                widths={[400, 600, 900, 1200]}
+                sizes="(max-width: 800px) 92vw, 560px"
+                loading="eager"
+                fetchpriority="high"
+                class="office"
+            />
+        </div>
+    </div>
+</section>
+
+<style>
+    .intro {
+        animation: intro-in 0.8s ease-out both;
+    }
+    @keyframes intro-in {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+    }
+
+    .intro-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 40px;
+        min-height: 700px;
+        padding-block: 20px;
+    }
+    .intro-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    h1 {
+        margin: 0 0 20px;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+    p {
+        margin: 0 0 60px;
+        font-size: 20px;
+    }
+
+    .cta {
+        align-self: center;
+        padding: 20px 40px;
+        border-radius: 30px;
+        background: var(--text);
+        color: var(--orange);
+        font-size: 22px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 10px 20px rgb(var(--text-rgb) / 0.25);
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
+    }
+    .cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 28px rgb(var(--text-rgb) / 0.3);
+    }
+
+    .office {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1.2;
+        object-fit: contain;
+    }
+
+    @media (max-width: 800px) {
+        .intro-grid {
+            grid-template-columns: 1fr;
+            min-height: auto;
+            gap: 20px;
+            padding-block: 20px 40px;
+            text-align: center;
+        }
+        p {
+            margin-bottom: 30px;
+        }
+    }
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 24px;
+        }
+        p {
+            font-size: 16px;
+        }
+        .cta {
+            padding: 15px 40px;
+            font-size: 18px;
+        }
+    }
+</style>

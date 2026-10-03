@@ -1,0 +1,188 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { ui, type Lang } from "../i18n/strings";
+import aws from "../assets/tools/awsLogo.png";
+import dart from "../assets/tools/dartLogo.png";
+import firebase from "../assets/tools/firebaseLogo.png";
+import flutter from "../assets/tools/flutterLogo.png";
+import android from "../assets/tools/androidLogo.png";
+import ios from "../assets/tools/iosLogo.png";
+import python from "../assets/tools/pythonLogo.webp";
+
+interface Props {
+    lang: Lang;
+}
+
+const t = ui[Astro.props.lang];
+
+// img: archivo en src/assets/tools — icon: logo de Iconify (set "logos")
+type Tool = { name: string; img?: ImageMetadata; icon?: string };
+
+const tools: Tool[] = [
+    { name: "AWS", img: aws },
+    { name: "Dart", img: dart },
+    { name: "Firebase", img: firebase },
+    { name: "Flutter", img: flutter },
+    { name: "Astro", icon: "logos:astro" },
+    { name: "Android", img: android },
+    { name: "iOS", img: ios },
+    { name: "Python", img: python },
+];
+---
+
+<section id="tools" class="section">
+    <div class="container head">
+        <h2>{t.tools.title}</h2>
+        <p class="muted">{t.tools.description}</p>
+    </div>
+
+    <div class="marquee">
+        <div class="marquee-track">
+            {
+                [0, 1].map((copy) => (
+                    <ul
+                        class="group"
+                        aria-hidden={copy === 1 ? "true" : undefined}
+                    >
+                        {tools.map((tool) => (
+                            <li class="logo">
+                                {tool.icon ? (
+                                    <Icon
+                                        name={tool.icon}
+                                        class="logo-img"
+                                        title={
+                                            copy === 0 ? tool.name : undefined
+                                        }
+                                    />
+                                ) : (
+                                    tool.img && (
+                                        <Image
+                                            src={tool.img}
+                                            alt={copy === 0 ? tool.name : ""}
+                                            widths={[240, 480]}
+                                            sizes="180px"
+                                            class="logo-img"
+                                        />
+                                    )
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .head {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    h2 {
+        margin: 0 0 16px;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+    .head p {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .marquee {
+        overflow: hidden;
+        padding-block: 16px; /* espacio para sombra y hover */
+    }
+    .marquee-track {
+        display: flex;
+        width: max-content;
+        animation: marquee 40s linear infinite;
+    }
+    .marquee:hover .marquee-track {
+        animation-play-state: paused;
+    }
+
+    /* Dos copias idénticas: al llegar a -50% el loop es perfecto */
+    .group {
+        display: flex;
+        gap: 24px;
+        margin: 0;
+        padding: 0 24px 0 0;
+        list-style: none;
+    }
+
+    .logo {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 240px;
+        height: 160px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid rgb(0 0 0 / 0.08);
+        box-shadow: 0 4px 16px rgb(0 0 0 / 0.08);
+        transition: transform 0.2s;
+    }
+    .logo:hover {
+        transform: translateY(-4px);
+    }
+
+    /* Tamaño fijo: el logo nunca puede salirse de la tarjeta (sirve para <img> y <svg>) */
+    .logo-img {
+        display: block;
+        width: 180px;
+        height: 104px;
+        object-fit: contain;
+    }
+
+    @keyframes marquee {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* Celulares: tarjetas más chicas, proporcionales a la pantalla */
+    @media (max-width: 800px) {
+        h2 {
+            font-size: 24px;
+        }
+        .head p {
+            font-size: 16px;
+        }
+        .group {
+            gap: 12px;
+            padding-right: 12px;
+        }
+        .logo {
+            width: 38vw;
+            max-width: 170px;
+            height: auto;
+            aspect-ratio: 3 / 2;
+            border-radius: 12px;
+        }
+        .logo-img {
+            width: 75%;
+            height: 65%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .marquee-track {
+            animation: none;
+            width: auto;
+            justify-content: center;
+        }
+        .group {
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 16px;
+        }
+        .group[aria-hidden="true"] {
+            display: none;
+        }
+    }
+</style>

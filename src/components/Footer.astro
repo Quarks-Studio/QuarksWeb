@@ -1,0 +1,204 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { ui, type Lang } from "../i18n/strings";
+import { SITE } from "../data/site";
+import isologo from "../assets/isologo.png";
+
+interface Props {
+    lang: Lang;
+}
+
+const t = ui[Astro.props.lang].footer;
+const year = new Date().getFullYear();
+
+const contactItems = [
+    {
+        icon: "fa6-solid:envelope",
+        value: SITE.email,
+        href: `mailto:${SITE.email}`,
+    },
+    {
+        icon: "fa6-solid:phone",
+        value: SITE.phone,
+        href: `tel:${SITE.phoneE164}`,
+    },
+    { icon: "fa6-solid:location-dot", value: SITE.location, href: undefined },
+];
+---
+
+<footer class="footer">
+    <div class="container top">
+        <div class="brand">
+            <Image
+                src={isologo}
+                alt="Quarks Studio"
+                height={36}
+                densities={[1, 2]}
+                class="logo"
+            />
+            <p class="tagline">{t.tagline}</p>
+            <ul class="socials">
+                {
+                    SITE.socials.map((s) => (
+                        <li>
+                            <a
+                                href={s.url}
+                                target="_blank"
+                                rel="noopener"
+                                aria-label={s.name}
+                                title={s.name}
+                            >
+                                <Icon name={s.icon} class="social-ico" />
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <div class="contact">
+            <p class="col-title">{t.contact}</p>
+            <ul class="contact-list">
+                {
+                    contactItems.map((it) => (
+                        <li>
+                            <Icon name={it.icon} class="ci" />
+                            {it.href ? (
+                                <a href={it.href}>{it.value}</a>
+                            ) : (
+                                <span>{it.value}</span>
+                            )}
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <div class="container">
+            <p>™ 2024 / {year} Quarks Studio — {t.rights}</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: var(--footer-bg);
+        color: #fff;
+    }
+
+    .top {
+        display: grid;
+        grid-template-columns: 5fr 4fr;
+        gap: 40px;
+        padding: 56px 24px;
+    }
+
+    .logo {
+        height: 36px;
+        width: auto;
+        filter: brightness(0) invert(1);
+    } /* isologo en blanco */
+    .tagline {
+        max-width: 420px;
+        margin: 16px 0 28px;
+        font-size: 14px;
+        line-height: 1.65;
+        color: rgb(255 255 255 / 0.4);
+    }
+
+    .socials {
+        display: flex;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .socials a {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgb(255 255 255 / 0.07);
+        border: 1px solid rgb(255 255 255 / 0.12);
+        color: rgb(255 255 255 / 0.55);
+        transition:
+            background-color 0.2s,
+            border-color 0.2s,
+            color 0.2s;
+    }
+    .socials a:hover {
+        background: rgb(218 106 0 / 0.2);
+        border-color: rgb(218 106 0 / 0.5);
+        color: var(--orange);
+    }
+    .social-ico {
+        width: 18px;
+        height: 18px;
+    }
+
+    .col-title {
+        margin: 0 0 20px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: rgb(255 255 255 / 0.4);
+    }
+    .contact-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .contact-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: rgb(255 255 255 / 0.6);
+    }
+    .contact-list a {
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .contact-list a:hover {
+        color: var(--orange);
+    }
+    .ci {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        margin-top: 2px;
+        color: rgb(255 255 255 / 0.4);
+    }
+
+    .bottom {
+        border-top: 1px solid rgb(255 255 255 / 0.08);
+    }
+    .bottom p {
+        margin: 0;
+        padding: 20px 24px;
+        text-align: center;
+        font-size: 12px;
+        color: rgb(255 255 255 / 0.4);
+    }
+
+    @media (max-width: 700px) {
+        .top {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+        .contact {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgb(255 255 255 / 0.08);
+        }
+    }
+</style>

@@ -1,0 +1,169 @@
+---
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
+import '@fontsource/poppins/800.css';
+import '@fontsource/poppins/900.css';
+import '../styles/global.css';
+import { ui, paths, type Lang } from '../i18n/strings';
+import { SITE } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  noindex?: boolean;
+}
+
+const { lang, noindex = false } = Astro.props;
+const t = ui[lang];
+const title = Astro.props.title ?? t.seo.title;
+const canonical = new URL(paths[lang], SITE.url).href;
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  logo: SITE.ogImage,
+  description:
+    'Flutter app development studio specializing in mobile apps, web apps, and custom software.',
+  foundingLocation: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Buenos Aires',
+      addressCountry: 'AR',
+    },
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: SITE.email,
+    telephone: '+54-9-11-5855-7593',
+    contactType: 'customer service',
+    availableLanguage: ['Spanish', 'English'],
+  },
+  sameAs: SITE.socials.filter((s) => s.name !== 'WhatsApp').map((s) => s.url),
+  knowsAbout: ['Flutter', 'Dart', 'Firebase', 'Mobile App Development', 'Web Development'],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  url: SITE.url,
+  inLanguage: lang === 'es' ? 'es-AR' : 'en-US',
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Tema antes del primer paint (sin flash) + marca que hay JS -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('js');
+        let theme = 'light';
+        try {
+          theme =
+            localStorage.getItem('theme') ??
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        } catch {}
+        root.dataset.theme = theme;
+      })();
+    </script>
+
+    {/* Ex redirect de go_router: solo en "/", respeta elección manual */}
+    {lang === 'en' && (
+      <script is:inline>
+        (() => {
+          try {
+            if (location.pathname !== '/') return;
+            const saved = localStorage.getItem('lang');
+            const browserEs = (navigator.language || '').toLowerCase().startsWith('es');
+            if (saved === 'es' || (!saved && browserEs)) location.replace('/es/');
+          } catch {}
+        })();
+      </script>
+    )}
+
+    <title>{title}</title>
+    <meta name="description" content={t.seo.description} />
+    <meta name="author" content="Quarks Studio" />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <meta name="theme-color" content="#DA6A00" />
+
+    {!noindex && (
+      <>
+        <link rel="canonical" href={canonical} />
+        <link rel="alternate" hreflang="en" href={`${SITE.url}/`} />
+        <link rel="alternate" hreflang="es" href={`${SITE.url}/es/`} />
+        <link rel="alternate" hreflang="x-default" href={`${SITE.url}/`} />
+      </>
+    )}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={t.seo.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={SITE.ogImage} />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:locale" content={t.seo.ogLocale} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_AR'} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={t.seo.description} />
+    <meta name="twitter:image" content={SITE.ogImage} />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icons/Icon-192.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+
+    <!-- GA4 (misma propiedad que Firebase Analytics) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-CDYS0CG35Z"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-CDYS0CG35Z');
+    </script>
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      // Reemplazo de VisibilityDetector: anima todo lo que tenga .reveal
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.3 },
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

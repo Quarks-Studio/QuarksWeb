@@ -1,0 +1,596 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { ui, paths, type Lang } from "../i18n/strings";
+import { SITE } from "../data/site";
+import isologo from "../assets/isologo.png";
+import flagEn from "../assets/misc/en.png";
+import flagEs from "../assets/misc/es.png";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+
+const links = [
+    { href: "#about", label: t.nav.about },
+    { href: "#services", label: t.nav.services },
+    { href: "#tools", label: t.nav.tools },
+    { href: "#clients", label: t.nav.clients },
+    { href: "#contact", label: t.nav.contact },
+];
+
+const languages: { code: Lang; label: string; flag: ImageMetadata }[] = [
+    { code: "en", label: "EN", flag: flagEn },
+    { code: "es", label: "ES", flag: flagEs },
+];
+
+const closeLabel = lang === "es" ? "Cerrar" : "Close";
+const waLabel =
+    lang === "es" ? "Escríbenos por WhatsApp" : "Message us on WhatsApp";
+---
+
+<header class="site-header">
+    <div class="container bar">
+        <a href={paths[lang]} class="brand" aria-label="Quarks Studio">
+            <Image
+                src={isologo}
+                alt="Quarks Studio"
+                height={40}
+                densities={[1, 2]}
+                loading="eager"
+                class="logo"
+            />
+        </a>
+
+        <nav class="nav" aria-label={t.nav.menu}>
+            {links.map((l) => <a href={l.href}>{l.label}</a>)}
+        </nav>
+
+        <div class="actions">
+            <button
+                type="button"
+                class="theme-switch"
+                role="switch"
+                aria-checked="false"
+                aria-label={t.nav.theme}
+                data-theme-toggle
+            >
+                <Icon name="fa6-solid:sun" class="ico" />
+                <span class="track"><span class="thumb"></span></span>
+                <Icon name="fa6-solid:moon" class="ico" />
+            </button>
+
+            <details class="lang">
+                <summary aria-label={t.nav.language}>
+                    <Icon name="fa6-solid:language" class="ico-lg" />
+                    <span>{lang.toUpperCase()}</span>
+                </summary>
+                <ul class="lang-menu">
+                    {
+                        languages.map((l) => (
+                            <li>
+                                <a
+                                    href={paths[l.code]}
+                                    hreflang={l.code}
+                                    lang={l.code}
+                                    data-lang={l.code}
+                                    aria-current={
+                                        l.code === lang ? "true" : undefined
+                                    }
+                                >
+                                    <Image
+                                        src={l.flag}
+                                        alt=""
+                                        width={24}
+                                        densities={[1, 2]}
+                                        class="flag"
+                                    />
+                                    <span>{l.label}</span>
+                                    {l.code === lang && (
+                                        <Icon
+                                            name="fa6-solid:circle-check"
+                                            class="check"
+                                        />
+                                    )}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </details>
+
+            <button
+                type="button"
+                class="menu-btn"
+                aria-label={t.nav.menu}
+                aria-controls="menu-drawer"
+                data-menu-open
+            >
+                <Icon name="fa6-solid:bars" class="ico-lg" />
+            </button>
+        </div>
+    </div>
+</header>
+
+<dialog id="menu-drawer" class="drawer" aria-label={t.nav.menu}>
+    <div class="drawer-inner">
+        <div class="drawer-top">
+            <Image
+                src={isologo}
+                alt="Quarks Studio"
+                height={32}
+                densities={[1, 2]}
+                class="drawer-logo"
+            />
+            <button
+                type="button"
+                class="drawer-close"
+                aria-label={closeLabel}
+                data-menu-close
+            >
+                <Icon name="fa6-solid:xmark" class="ico-lg" />
+            </button>
+        </div>
+
+        <span class="drawer-label">{t.nav.menu}</span>
+
+        <nav class="drawer-nav">
+            {
+                links.map((l, i) => (
+                    <a href={l.href} data-menu-link style={`--i:${i}`}>
+                        <span class="num">
+                            {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span class="txt">{l.label}</span>
+                        <Icon name="fa6-solid:arrow-right" class="arrow" />
+                    </a>
+                ))
+            }
+        </nav>
+
+        <div class="drawer-foot">
+            <a
+                href={SITE.whatsapp}
+                target="_blank"
+                rel="noopener"
+                class="wa-cta"
+            >
+                <Icon name="fa6-brands:whatsapp" class="ico-lg" />
+                <span>{waLabel}</span>
+            </a>
+            <a href={`mailto:${SITE.email}`} class="mail">{SITE.email}</a>
+        </div>
+    </div>
+</dialog>
+
+<script>
+    const root = document.documentElement;
+
+    // ── Tema ──────────────────────────────────────────────
+    const toggles = document.querySelectorAll<HTMLButtonElement>(
+        "[data-theme-toggle]",
+    );
+    const syncToggles = () =>
+        toggles.forEach((b) =>
+            b.setAttribute(
+                "aria-checked",
+                String(root.dataset.theme === "dark"),
+            ),
+        );
+    syncToggles();
+    toggles.forEach((btn) =>
+        btn.addEventListener("click", () => {
+            const next = root.dataset.theme === "dark" ? "light" : "dark";
+            root.dataset.theme = next;
+            try {
+                localStorage.setItem("theme", next);
+            } catch {}
+            syncToggles();
+        }),
+    );
+
+    // ── Idioma: recordar elección manual ──────────────────
+    document.querySelectorAll<HTMLAnchorElement>("[data-lang]").forEach((a) =>
+        a.addEventListener("click", () => {
+            try {
+                localStorage.setItem("lang", a.dataset.lang ?? "en");
+            } catch {}
+        }),
+    );
+
+    const langMenu = document.querySelector<HTMLDetailsElement>("details.lang");
+    document.addEventListener("click", (e) => {
+        if (langMenu?.open && !langMenu.contains(e.target as Node))
+            langMenu.open = false;
+    });
+
+    // ── Drawer mobile ─────────────────────────────────────
+    const drawer = document.getElementById(
+        "menu-drawer",
+    ) as HTMLDialogElement | null;
+    if (drawer) {
+        const openDrawer = () => {
+            drawer.showModal();
+            root.style.overflow = "hidden"; // bloquea el scroll de fondo
+        };
+        const closeDrawer = () => {
+            drawer.close();
+            root.style.overflow = "";
+        };
+
+        document
+            .querySelector("[data-menu-open]")
+            ?.addEventListener("click", openDrawer);
+        document
+            .querySelector("[data-menu-close]")
+            ?.addEventListener("click", closeDrawer);
+        drawer.addEventListener("click", (e) => {
+            if (e.target === drawer) closeDrawer(); // click en el fondo
+        });
+        drawer.addEventListener("close", () => (root.style.overflow = "")); // Esc
+        drawer
+            .querySelectorAll("[data-menu-link]")
+            .forEach((a) => a.addEventListener("click", closeDrawer));
+    }
+</script>
+
+<style>
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        height: var(--header-h);
+        background: var(--bg);
+        transition: background-color 0.2s;
+    }
+    .bar {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-inline: 20px;
+    }
+    .brand {
+        display: flex;
+        flex-shrink: 0;
+    }
+    .logo {
+        height: 40px;
+        width: auto;
+    }
+
+    .nav {
+        display: flex;
+        gap: 4px;
+    }
+    .nav a {
+        font-size: 18px;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: color 0.2s;
+    }
+    .nav a:hover {
+        color: var(--orange);
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .ico {
+        width: 18px;
+        height: 18px;
+    }
+    .ico-lg {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* ── Switch de tema (colores y posición vienen de global.css) ── */
+    .theme-switch {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px;
+        background: none;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+    }
+    .track {
+        position: relative;
+        width: 40px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--switch-track);
+        transition: background-color 0.2s;
+    }
+    .thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--switch-thumb);
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+        transform: translateX(var(--switch-x));
+        transition:
+            transform 0.2s,
+            background-color 0.2s;
+    }
+
+    /* ── Menú de idioma ── */
+    .lang {
+        position: relative;
+    }
+    .lang summary {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .lang summary::-webkit-details-marker {
+        display: none;
+    }
+    .lang summary::marker {
+        content: "";
+    }
+    .lang-menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        min-width: 150px;
+        margin: 0;
+        padding: 8px;
+        list-style: none;
+        background: var(--bg);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+    }
+    .lang-menu a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 18px;
+        text-decoration: none;
+    }
+    .lang-menu a:hover {
+        background: rgb(var(--text-rgb) / 0.06);
+    }
+    .lang-menu a[aria-current] {
+        font-weight: 700;
+        color: #2196f3;
+    }
+    .flag {
+        width: 24px;
+        height: 16px;
+        object-fit: cover;
+    }
+    .check {
+        width: 20px;
+        height: 20px;
+        margin-left: auto;
+        color: #4caf50;
+    }
+
+    /* ── Hamburguesa: solo mobile ── */
+    .menu-btn {
+        display: none;
+        padding: 8px;
+        background: none;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    @media (max-width: 800px) {
+        .nav {
+            display: none;
+        }
+        .menu-btn {
+            display: flex;
+        }
+        .logo {
+            height: 36px;
+        }
+        .bar {
+            padding-inline: 12px;
+            gap: 8px;
+        }
+        .actions {
+            gap: 2px;
+        }
+    }
+
+    /* Celulares chicos: compactar para que el header no desborde */
+    @media (max-width: 480px) {
+        .logo {
+            height: 30px;
+        }
+        .theme-switch {
+            padding: 6px 4px;
+        }
+        .theme-switch .ico {
+            display: none;
+        }
+        .lang summary {
+            padding: 6px 4px;
+        }
+    }
+
+    /* ── Drawer ── */
+    .drawer {
+        position: fixed;
+        inset: 0 0 0 auto;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        width: min(340px, 88vw);
+        max-width: none;
+        height: 100dvh;
+        max-height: none;
+        background: var(--bg);
+        color: var(--text);
+        box-shadow: -12px 0 40px rgb(0 0 0 / 0.25);
+    }
+    .drawer::backdrop {
+        background: rgb(0 0 0 / 0.45);
+        backdrop-filter: blur(3px);
+    }
+    .drawer[open] {
+        animation: drawer-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes drawer-in {
+        from {
+            transform: translateX(100%);
+        }
+    }
+
+    .drawer-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 24px 28px;
+        overflow-y: auto;
+    }
+
+    .drawer-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .drawer-logo {
+        height: 32px;
+        width: auto;
+    }
+    .drawer-close {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border: 0;
+        border-radius: 50%;
+        background: rgb(var(--text-rgb) / 0.06);
+        color: inherit;
+        cursor: pointer;
+        transition:
+            background-color 0.2s,
+            transform 0.2s;
+    }
+    .drawer-close:hover {
+        background: rgb(var(--text-rgb) / 0.12);
+        transform: rotate(90deg);
+    }
+
+    .drawer-label {
+        margin: 36px 0 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--orange);
+    }
+
+    .drawer-nav {
+        display: flex;
+        flex-direction: column;
+    }
+    .drawer-nav a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 0;
+        border-bottom: 1px solid rgb(var(--text-rgb) / 0.08);
+        text-decoration: none;
+        font-size: 22px;
+        font-weight: 600;
+    }
+    .drawer-nav .num {
+        min-width: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgb(var(--text-rgb) / 0.35);
+    }
+    .drawer-nav .txt {
+        flex: 1;
+        transition: color 0.2s;
+    }
+    .drawer-nav .arrow {
+        width: 16px;
+        height: 16px;
+        color: var(--orange);
+        opacity: 0.5;
+        transition:
+            opacity 0.2s,
+            transform 0.2s;
+    }
+    .drawer-nav a:hover .txt,
+    .drawer-nav a:focus-visible .txt {
+        color: var(--orange);
+    }
+    .drawer-nav a:hover .arrow,
+    .drawer-nav a:focus-visible .arrow {
+        opacity: 1;
+        transform: translateX(4px);
+    }
+
+    /* Entrada escalonada de los links */
+    .drawer[open] .drawer-nav a {
+        animation: item-in 0.4s ease-out both;
+        animation-delay: calc(var(--i) * 50ms + 100ms);
+    }
+    @keyframes item-in {
+        from {
+            opacity: 0;
+            transform: translateX(24px);
+        }
+    }
+
+    .drawer-foot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 32px;
+    }
+    .wa-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 14px 20px;
+        border-radius: 14px;
+        background: var(--orange);
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        transition: filter 0.2s;
+    }
+    .wa-cta:hover {
+        filter: brightness(1.1);
+    }
+    .mail {
+        font-size: 13px;
+        color: rgb(var(--text-rgb) / 0.55);
+        text-decoration: none;
+    }
+    .mail:hover {
+        color: var(--orange);
+    }
+</style>

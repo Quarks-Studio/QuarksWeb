@@ -1,0 +1,134 @@
+---
+import { Image } from "astro:assets";
+import { ui, type Lang } from "../i18n/strings";
+import mobileImg from "../assets/services/mobile_app.png";
+import webImg from "../assets/services/web_development.png";
+import customImg from "../assets/services/software_development.png";
+
+interface Props {
+    lang: Lang;
+}
+
+const t = ui[Astro.props.lang];
+
+const services = [
+    { ...t.services.mobile, img: mobileImg },
+    { ...t.services.web, img: webImg },
+    { ...t.services.custom, img: customImg },
+];
+---
+
+<section id="services" class="section">
+    <div class="container">
+        <div class="head">
+            <h2>{t.services.title}</h2>
+            <p class="muted">{t.services.description}</p>
+        </div>
+
+        <div class="list">
+            {
+                services.map((s, i) => (
+                    <article
+                        class:list={[
+                            "service",
+                            "reveal",
+                            { reverse: i % 2 === 1 },
+                        ]}
+                    >
+                        <div class="media">
+                            <Image
+                                src={s.img}
+                                alt=""
+                                widths={[300, 600, 900]}
+                                sizes="(max-width: 800px) 90vw, 560px"
+                                class="img"
+                            />
+                        </div>
+                        <div class="text">
+                            <h3>{s.title}</h3>
+                            <p>{s.description}</p>
+                        </div>
+                    </article>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .head {
+        text-align: center;
+        margin-bottom: 100px;
+        padding-top: 20px;
+    }
+    h2 {
+        margin: 0 0 16px;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+    .head p {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .service {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        padding-block: 20px;
+        border-bottom: 1px solid var(--text);
+    }
+    .service.reverse {
+        flex-direction: row-reverse;
+    }
+    .media,
+    .text {
+        flex: 1;
+        min-width: 0;
+    }
+    .img {
+        width: 100%;
+        height: 350px;
+        object-fit: contain;
+    }
+
+    h3 {
+        margin: 0 0 16px;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+    .text p {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    @media (max-width: 800px) {
+        .head {
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 28px;
+        }
+        .head p {
+            font-size: 16px;
+        }
+        .service,
+        .service.reverse {
+            flex-direction: column;
+            gap: 20px;
+            padding-block: 32px;
+            text-align: center;
+        }
+        .img {
+            height: 240px;
+        }
+        h3 {
+            font-size: 22px;
+        }
+        .text p {
+            font-size: 16px;
+        }
+    }
+</style>

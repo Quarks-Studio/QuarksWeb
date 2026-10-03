@@ -1,0 +1,153 @@
+---
+import { Image } from "astro:assets";
+import "@fontsource/orbitron/400.css";
+import "@fontsource/orbitron/900.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import crewmate from "../assets/misc/amongus_crewmate.png";
+
+// PRNG con semilla fija (equivalente a Random(42) del Flutter)
+let seed = 42;
+const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296;
+    return seed / 4294967296;
+};
+
+const stars = Array.from({ length: 160 }, () => ({
+    x: rand() * 100,
+    y: rand() * 100,
+    size: (rand() * 1.4 + 0.3) * 2,
+    delay: rand() * 4,
+}));
+---
+
+<BaseLayout lang="en" title="404 — Quarks Studio" noindex>
+    <main class="space">
+        <div class="stars" aria-hidden="true">
+            {
+                stars.map((s) => (
+                    <span
+                        style={`left:${s.x}%;top:${s.y}%;width:${s.size}px;height:${s.size}px;animation-delay:-${s.delay}s`}
+                    />
+                ))
+            }
+        </div>
+
+        <div class="drift" aria-hidden="true">
+            <Image
+                src={crewmate}
+                alt=""
+                height={120}
+                densities={[1, 2]}
+                class="crew"
+            />
+        </div>
+
+        <div class="content">
+            <h1>404</h1>
+            <p>Page not found</p>
+            <nav class="links">
+                <a href="/">Back to home</a>
+                <span aria-hidden="true">·</span>
+                <a href="/es/">Volver al inicio</a>
+            </nav>
+        </div>
+    </main>
+</BaseLayout>
+
+<style>
+    .space {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #000;
+        color: #fff;
+    }
+
+    .stars span {
+        position: absolute;
+        border-radius: 50%;
+        background: #fff;
+        animation: twinkle 2s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+        from {
+            opacity: 0.4;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .drift {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        margin-top: -60px;
+        animation: drift 30s linear infinite;
+    }
+    @keyframes drift {
+        from {
+            transform: translate(-20vw, -20vh);
+        }
+        to {
+            transform: translate(110vw, 20vh);
+        }
+    }
+    .crew {
+        height: 120px;
+        width: auto;
+        animation: spin 12s linear infinite;
+    }
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .content {
+        position: relative;
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+    }
+    h1 {
+        margin: 0;
+        font-size: 96px;
+        font-weight: 900;
+        letter-spacing: 8px;
+        animation: pop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both; /* ~elasticOut */
+    }
+    @keyframes pop {
+        from {
+            transform: scale(0);
+        }
+    }
+    p {
+        margin: 12px 0 32px;
+        font-size: 20px;
+        letter-spacing: 3px;
+        color: rgb(255 255 255 / 0.7);
+    }
+
+    .links {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        color: rgb(255 255 255 / 0.5);
+    }
+    .links a {
+        color: var(--orange);
+    }
+
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 64px;
+        }
+        p {
+            font-size: 16px;
+        }
+    }
+</style>

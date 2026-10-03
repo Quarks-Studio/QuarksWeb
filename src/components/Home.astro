@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "./Header.astro";
+import Intro from "./Intro.astro";
+import Services from "./Services.astro";
+import Tools from "./Tools.astro";
+import Portfolio from "./Portfolio.astro";
+import Contact from "./Contact.astro";
+import Footer from "./Footer.astro";
+import type { Lang } from "../i18n/strings";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<BaseLayout lang={lang}>
+    <Header lang={lang} />
+    <main>
+        <Intro lang={lang} />
+        <Services lang={lang} />
+        <Tools lang={lang} />
+        <Portfolio lang={lang} />
+        <Contact lang={lang} />
+    </main>
+    <Footer lang={lang} />
+</BaseLayout>
